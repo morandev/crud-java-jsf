@@ -7,15 +7,97 @@
     <h:head>
         <title>Primefaces CRUD</title>
     </h:head>
-    <h:body>
-        <p:dataTable var="item" value="#{managedBeanTipoRespuesto.all}">
-            <p:column headerText="ID">
-                <h:outputText value="#{item.pkId}"/>
-            </p:column>
-            <p:column headerText="Nombre">
-                <h:outputText value="#{item.nombre}"/>
-            </p:column>
-        </p:dataTable>
+    <h:body style="display: flex; justify-content: center; padding: 1rem; font-size: 0.75rem">
+        <div style="max-width: 80vw;">
+            <h:form id="form" >
+                <p:commandButton 
+                    value="CREAR"
+                    actionListener="#{managedBeanTipoRespuesto.resetActualItem()}"
+                    oncomplete="PF('dlg2').show();"
+                    update=":form:datos"
+                    style="background: lightskyblue; color: white; margin-bottom: 1rem"
+                    >
+                </p:commandButton>
+                <p:dataTable var="item" value="#{managedBeanTipoRespuesto.all}">
+                    <p:column headerText="ID" width="10">
+                        <h:outputText value="#{item.pkId}"/>
+                    </p:column>
+                    <p:column headerText="Nombre" width="100">
+                        <h:outputText value="#{item.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" width="250">
+                        <h:outputText value="#{item.descripcion}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Alta" width="250">
+                        <h:outputText value="#{item.fechaRegistro}"/>
+                    </p:column>
+                    <p:column headerText="Acciones" width="175">
+                        <div style="display: flex; justify-content: space-between">
+                            <p:commandButton 
+                                value="EDITAR"
+                                actionListener="#{managedBeanTipoRespuesto.setActualItem(item)}"
+                                oncomplete="PF('dlg2').show();"
+                                update=":form:datos"
+                                style="background-color: #ff7f39; color: white; "
+                                >
+                            </p:commandButton>
+                            <p:commandButton 
+                                value="ELIMINAR"
+                                actionListener="#{managedBeanTipoRespuesto.setDeleteItem(item)}"
+                                oncomplete="PF('dlg2').show();"
+                                update=":form:datos"
+                                style="background-color: red; color: white; "
+                                >
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+                <p:dialog 
+                    header="Tipo Respuesto"
+                    height="330"
+                    modal="true"
+                    widgetVar="dlg2"
+                    resizable="false"
+                    >
+                    <p:panelGrid 
+                        id="datos" 
+                        columns="1"
+                        style="font-weight: bold"
+                        >
+                        <p:panelGrid columns="2">
+                            <h:outputText value="NOMBRE" />
+                            <p:inputText 
+                                value="#{managedBeanTipoRespuesto.actualTipoRespuesto.nombre}" 
+                                disabled="#{managedBeanTipoRespuesto.tipo_accion eq 3}"
+                                /> 
+                            <h:outputText value="DESCRIPCION" />
+                            <p:inputText 
+                                value="#{managedBeanTipoRespuesto.actualTipoRespuesto.descripcion}" 
+                                disabled="#{managedBeanTipoRespuesto.tipo_accion eq 3}"
+                                /> 
+                            <h:outputText value="FECHA ALTA" />
+                            <p:datePicker  
+                                view="date"
+                                pattern="dd/MM/yyyy"
+                                value="#{managedBeanTipoRespuesto.actualTipoRespuesto.fechaRegistro}"
+                                disabled="#{managedBeanTipoRespuesto.tipo_accion eq 3}"
+                                /> 
+                        </p:panelGrid>
+                        <p:commandButton 
+                            value="#{managedBeanTipoRespuesto.tipo_accion eq 1 ? 'GRABAR'
+                                     :managedBeanTipoRespuesto.tipo_accion eq 2 ? 'ACTUALIZAR'
+                                     :managedBeanTipoRespuesto.tipo_accion eq 3 ? 'CONFIRMAR'
+                                     :''}"
+                            actionListener="#{managedBeanTipoRespuesto.procesar()}"
+                            oncomplete="PF('dlg2').hide();"
+                            update=":form"
+                            style="background: #00a82f; color: white;"
+                            >
+                        </p:commandButton>
+                    </p:panelGrid>
+                </p:dialog>
+            </h:form>
+        </div>
     </h:body>
 </html>
 
